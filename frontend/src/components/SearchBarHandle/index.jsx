@@ -12,34 +12,31 @@ function SearchBarHandle() {
     setTwitterHandle(event.target.value);
   };
 
-  
+
     const fetchData = async () => {
       if (!twitterHandle) return; // Don't make a request if twitterHandle is empty
       setLoading(true);
       setError('');
 
       try {
-        const response = await axios.get('http://localhost:5000/tweets', {
-      params: {
-        twitter_handle: twitterHandle
-      }
-      });
-        
-        
-        // Update this part to handle the response data correctly
-        setPredictionResult(response.data.prediction === 1 ? 'User is depressed ' : 'User is not depressed');
-        console.log(predictionResult)
+        const response = await axios.post('http://localhost:5000/tweets', {
+            twitter_handle: twitterHandle
+        }
+      );
+
+        console.log("Response: ",response.data)
+
+        const predictionMessage = response.data.prediction === 1 ? 'User is depressed' : 'User is not depressed';
+        setPredictionResult(predictionMessage);
+
+
       } catch (error) {
         console.error('Error fetching tweets:', error);
-        setError('Error fetching tweets. Please try again.' );
+        setError('Error fetching tweets. Please try again.');
       } finally {
         setLoading(false);
       }
     };
-
-    
-  
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     // No need to do anything here, useEffect will handle the API call
@@ -61,13 +58,7 @@ function SearchBarHandle() {
         </button>
       </form>
 
-      {loading ? (
-        <div>Loading...</div>
-      ) : error ? (
-        <div>Error: {error}</div>
-      ) : (
-        <div>{predictionResult}</div>
-      )}
+      {loading ? (<div>Loading...</div>) : error ? (<div>Error: {error}</div>) : (<div> {predictionResult}</div>)}
     </div>
   );
 }

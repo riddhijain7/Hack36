@@ -7,3 +7,4 @@ pandas
 numpy
 spacy
 scikit-learn
+flask-cors
